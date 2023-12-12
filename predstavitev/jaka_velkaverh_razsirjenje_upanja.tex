@@ -1,0 +1,77 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usetheme{Madrid}
+\setbeamertemplate{navigation symbols}{}
+
+\title[Razširjanje upanja]{Razširjanje upanja za lokalizacijo senzorskih omrežji}
+\author{Jaka Velkaverh}
+\institute{UL FMF}
+\date{18.12.2023}
+
+\theoremstyle{definition}
+\newtheorem{definicija}{Definicija}
+
+\begin{document}
+
+	\frame{\titlepage}
+
+	\begin{frame}
+		\frametitle{Opis problema}
+		\begin{block}{Lokalizacija senzorskega omrežja}
+			Omrežje si predstavljamo kot utežen graf, kjer so naprave vozlišča.
+			Dve vozlišči sta povezani, če sta pripadajoči napravi dovolj blizu,
+			da lahko izmerita razdaljo. Utež povezav je izmerjena razdalja,
+			kjer pri merjenju pride do napak.
+
+			Vemo lokacije od nekaterih naprav, tem rečemo sidra. Izračunati
+			želimo približke za lokacije ostalih, tem rečemo agenti.
+		\end{block}
+	\end{frame}
+	\begin{frame}
+		\frametitle{Verjetnostni pogled}
+		Oznake
+		\begin{itemize}
+			\item Vozlišča označujemo z črkami $t, u, s$.
+			\item $D_{t,u} = d_{t,u} + \nu_{u, v},$ naključne spremenljivke razdalje.
+			\item $\underline{X}_v$ naključne spremenljivke lokacij agentov.
+		\end{itemize}
+
+		Želimo izračunati gostoto porazdelitve
+		$$f_v\left(\underline{x}_v | \left\{D_{t,u} \text{ take kot izmerjene}\right\}\right)$$
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Markovska polja}
+		\begin{block}{Pogojna neodvisnost}
+			Nakjučna vektorja $\underline{X}, \underline{Y}$ sta pogojno
+			neodvisna ob $\underline{Z}$, če velja:
+			$$f_{\underline{X}, \underline{Y}}\left(\underline{x}, \underline{y}\ |\ \underline{Z} = \underline{z}\right) =
+			  f_{\underline{X}}\left(\underline{x}\ |\ \underline{Z} = \underline{z}\right) \
+			  f_{\underline{Y}}\left(\underline{y}\ |\ \underline{Z} = \underline{z}\right)
+			$$
+		\end{block}
+		\begin{definicija}
+			Graf $G = \left(V, E\right)$, in naključni slučajni vektorji
+			$\underline{X}_v$, indeksirani z $v \in V$ tvorijo Markovsko polje,
+			če velja Markova lastnost po parih:
+
+			Za vsaka nesosedna $t, u \in V$ sta $\underline{X}_t$, $\underline{X}_u$
+			pogojno neodvisna ob vseh ostalih
+			$\underline{X}_{V\backslash\left\{t, u\right\}}$
+		\end{definicija}
+	\end{frame}
+
+	\begin{block}{Hammersley–Cliffordov izrek}
+		Naj bo $G = \left(V, E\right)$ in $\underline{X}_v$ kot prej in dodatno
+		$f_{\underline{X}_V}\left(\underline{x}_V\right) > 0\quad \forall \underline{x}_V$.
+		Tedaj $G$ in $\underline{X}_V$ tvorita Markovsko polje natanko tedaj,
+		ko se skupna gostota faktorizira po klikah grafa $G$:
+		$$f_{\underline{X}_V}\left(\underline{x}_V\right) =
+			\prod_{C\;\text{klika}\;G}\psi_C\left(\underline{x}_C\right)$$
+	\end{block}
+
+\end{document}
+
