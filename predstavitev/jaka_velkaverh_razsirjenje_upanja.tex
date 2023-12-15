@@ -3,12 +3,12 @@
 \usepackage[slovene]{babel}
 \usepackage{amsmath}
 \usepackage{mathtools}
+\usepackage{multicol}
 \usetheme{Madrid}
 \setbeamertemplate{navigation symbols}{}
 
-\title[Razširjanje upanja]{Razširjanje upanja za lokalizacijo senzorskih omrežji}
+\title[Razširjanje zaupanja]{Razširjanje zaupanja za lokalizacijo senzorskih omrežji}
 \author{Jaka Velkaverh}
-\institute{UL FMF}
 \date{18.12.2023}
 
 \theoremstyle{definition}
@@ -34,13 +34,11 @@
 		\frametitle{Verjetnostni pogled}
 		Oznake
 		\begin{itemize}
-			\item Vozlišča označujemo z črkami $t, u, s$.
-			\item $D_{t,u} = d_{t,u} + \nu_{u, v},$ naključne spremenljivke razdalje.
-			\item $\underline{X}_v$ naključne spremenljivke lokacij agentov.
+			\item Vozlišča označujemo z črkami $u, v, s$.
+			\item Napaka pri merjenju $\nu_{u, v} \sim N\left(0, \sigma^2\right)$.
+			\item $\underline{X}_u \in K\left(0,R\right) \subseteq \mathbb{R}^n$ naključni vektor lokacije naprave.
+			\item $\underline{X}_A$ naključni vektor lokacije množice naprav $A$.
 		\end{itemize}
-
-		Želimo izračunati gostoto porazdelitve
-		$$f_v\left(\underline{x}_v | \left\{D_{t,u} \text{ take kot izmerjene}\right\}\right)$$
 	\end{frame}
 
 	\begin{frame}
@@ -53,25 +51,146 @@
 			  f_{\underline{Y}}\left(\underline{y}\ |\ \underline{Z} = \underline{z}\right)
 			$$
 		\end{block}
+		\pause
 		\begin{definicija}
 			Graf $G = \left(V, E\right)$, in naključni slučajni vektorji
 			$\underline{X}_v$, indeksirani z $v \in V$ tvorijo Markovsko polje,
 			če velja Markova lastnost po parih:
 
-			Za vsaka nesosedna $t, u \in V$ sta $\underline{X}_t$, $\underline{X}_u$
+			Za vsaka nesosedna $u, v \in V$ sta $\underline{X}_u$, $\underline{X}_v$
 			pogojno neodvisna ob vseh ostalih
-			$\underline{X}_{V\backslash\left\{t, u\right\}}$
+			$\underline{X}_{V\backslash\left\{u, v\right\}}$
 		\end{definicija}
 	\end{frame}
 
-	\begin{block}{Hammersley–Cliffordov izrek}
-		Naj bo $G = \left(V, E\right)$ in $\underline{X}_v$ kot prej in dodatno
-		$f_{\underline{X}_V}\left(\underline{x}_V\right) > 0\quad \forall \underline{x}_V$.
-		Tedaj $G$ in $\underline{X}_V$ tvorita Markovsko polje natanko tedaj,
-		ko se skupna gostota faktorizira po klikah grafa $G$:
-		$$f_{\underline{X}_V}\left(\underline{x}_V\right) =
-			\prod_{C\;\text{klika}\;G}\psi_C\left(\underline{x}_C\right)$$
-	\end{block}
+	\begin{frame}
+		\begin{block}{Hammersley–Cliffordov izrek}
+			Naj bo $G = \left(V, E\right)$ in $\underline{X}_v$ kot prej in dodatno
+			$f_{\underline{X}_V}\left(\underline{x}_V\right) > 0\quad \forall \underline{x}_V$.
+			Tedaj $G$ in $\underline{X}_V$ tvorita Markovsko polje natanko tedaj,
+			ko se skupna gostota faktorizira po klikah grafa $G$:
+			$$f_{\underline{X}_V}\left(\underline{x}_V\right) \propto
+				\prod_{C\;\text{klika}\;G}\psi_C\left(\underline{x}_C\right)$$
+		\end{block}
+		\pause
+		Torej če definiramo skupno gostoto kot produkt potencialov, bodo
+		pripadajoče slučajne spremenljivke tvorile Markovsko polje.
+	\end{frame}
+
+	\begin{frame}
+		Za $\left\{u,v\right\} \in E$ in $d_{u,v}$ izmerjena razdalja definiramo
+		$$
+		\psi_{u,v}\left(\underline{x}_u,\underline{x}_v\right) =
+		f_{\nu_{u, v}}\left(\left|\underline{x}_u-\underline{x}_v\right| - d_{u,v}\right) =
+		\frac{1}{\sigma\sqrt{2\pi}} \exp\left[-\frac{\left(\left|\underline{x}_u-\underline{x}_v\right| - d_{u,v}\right)^2}{2 \sigma^2}\right]
+		$$
+		Za klike $C$, ki niso velikosti $2$
+		$$
+		\psi_C\left(\underline{x}_C\right)=1
+		$$
+		Če imamo predhodne informacije o napravah jih lahko vstavimo v enojne potenciale.
+	\end{frame}
+
+	\begin{frame}
+		\begin{figure}[t]
+			\includegraphics[width=7cm]{"pairwise_potential.png"}
+			\caption{Primer potenciala parov, če enega od pozicij fiksiramo. Tu je izmerjena razdalja $10$, $\sigma$ pa $0{,}3$.}
+			\centering
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		Naj bodo $V_a$ agenti, $V_s$ pa sidra.
+		Z $\underline{y}_{V_s}$ označimo (fiksne) znane pozicije sider.
+		Posteriorna gostota bo torej
+		$$
+		f_{V_a | V_s}\left(\underline{x}_{V_a} | V_s = \underline{y}_{V_s}\right) \propto
+		\prod_{\substack{\left\{u,v\right\} \in E \\ u,v \text{ agenta}}}\psi_{u,v}\left(\underline{x}_u,\underline{x}_v\right)
+		\prod_{\substack{\left\{u,v\right\} \in E \\ u\text{ agent}, v \text{ sidro}}}\psi_{u,v}\left(\underline{x}_u,\underline{y}_v\right)
+		$$
+		\pause
+		Za $u \in V_a$ želimo izračunati robno gostoto
+		$$
+		f_{X_u | V_s}\left(\underline{x}_u | V_s = \underline{y}_{V_s}\right) =
+		\int_{V_a\backslash X_u} f_{V_a | V_s}\left(\underline{x}_{V_a\backslash X_u} | V_s = \underline{y}_{V_s}\right)
+		d\underline{x}_{V_a\backslash X_u}
+		$$
+	\end{frame}
+
+	\begin{frame}
+		Poglejmo si primer, ko je graf drevo.
+		\setlength{\columnsep}{-3.5cm}
+		\begin{multicols}{2}
+			\includegraphics[width=4cm]{message_passing.pdf}
+			\columnbreak{}
+
+			$$
+			\int_{V_a\backslash X_u} f_{V_a | V_s}\left(\underline{x}_{V_a\backslash X_A} | V_s = \underline{y}_{V_s}\right)
+			d\underline{x}_{V_a\backslash X_A} \propto
+			$$
+			$$
+			\int_{\underline{X}_B,\underline{X}_D,\underline{X}_C} \psi_{U,A} \psi_{B,A} \psi_{C,A} \psi_{V,C} \psi_{D,C}d\underline{x}_Bd\underline{x}_Dd\underline{x}_C =
+			$$
+			\pause
+			$$
+			\psi_{U,A} \int \psi_{B,A}d\underline{x}_B \int \psi_{C,A} \psi_{V,C}
+			\int \psi_{D,C}d\underline{x}_Dd\underline{x}_C=
+			$$
+		\end{multicols}
+	\end{frame}
+
+	\begin{frame}
+		\begin{align*}
+			\text{Za } u,v \in V_a\text{: } &
+			\mu_{u \to v}\left(\underline{x}_v\right) \coloneqq
+			\int \psi_{u,v}\left(\underline{x}_u,\underline{x}_v\right)
+			\prod_{t\in N\left(u\right)\backslash v}
+			\mu_{t \to u}\left(\underline{x}_u\right)d\underline{x}_u
+			\\
+			\text{Za }u \in V_s\text{ in }v \in V_a\text{: } &
+			\mu_{u \to v}\left(\underline{x}_v\right) \coloneqq
+			\psi_{u,v}\left(\underline{y}_u,\underline{x}_v\right)
+		\end{align*}
+		\pause
+		$$
+		\Rightarrow
+		\psi_{U,A} \int \psi_{B,A}d\underline{x}_B \int \psi_{C,A} \psi_{V,C}
+		\int \psi_{D,C}d\underline{x}_Dd\underline{x}_C=
+		$$
+		\pause
+		$$
+		\mu_{U \to A}\left(\underline{x}_A\right)\mu_{B \to A}\left(\underline{x}_A\right)
+		\int \psi_{C,A}
+		\mu_{V \to C}\left(\underline{x}_C\right)
+		\mu_{D \to C}\left(\underline{x}_C\right)d\underline{x}_C=
+		$$
+		\pause
+		$$
+		\mu_{U \to A}\left(\underline{x}_A\right)\mu_{B \to A}\left(\underline{x}_A\right)
+		\mu_{C \to A}\left(\underline{x}_A\right) =
+		$$
+		$$
+		\prod_{u \in N\left(A\right)}\mu_{u \to A}\left(\underline{x}_A\right)
+		$$
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Za grafe s cikli}
+		Naj bosta $u,v \in V_a$, $i \in \mathbb{N}$ pa število iteracije.
+		$$
+		M_u^{\left(i\right)}\left(\underline{x}_u\right) \coloneqq
+		\prod_{t \in N\left(u\right)}\mu_{t \to u}\left(\underline{x}_u\right)
+		$$
+		$$
+		\mu_{v \to u}^{\left(i\right)}\left(\underline{x}_u\right) \coloneqq
+		\int \psi_{v,u}\left(\underline{x}_v,\underline{x}_u\right)
+		\frac{
+			M_v^{\left(i-1\right)}\left(\underline{x}_v\right)}{
+			\mu_{u \to v}^{\left(i-1\right)}\left(\underline{x}_v\right)
+		}d\underline{x}_v
+		$$
+		Za drevesa to konvergira k pravim vrednostim.
+	\end{frame}
 
 \end{document}
 
