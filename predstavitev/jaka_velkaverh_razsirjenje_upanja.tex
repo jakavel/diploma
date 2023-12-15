@@ -163,22 +163,24 @@
 	\begin{frame}
 		\frametitle{Razširjanje zaupanja na drevesih}
 		Poglejmo si primer, ko je graf drevo.
-		\setlength{\columnsep}{-3.5cm}
+		\setlength{\columnsep}{-5cm}
 		\begin{multicols}{2}
 			\includegraphics[width=4cm]{message_passing.pdf}
 			\columnbreak{}
 
+			\vspace{5cm}
 			$$
 			\int_{V_a\backslash X_u} f_{V_a | V_s}\left(\underline{x}_{V_a\backslash X_A} | V_s = \underline{y}_{V_s}\right)
 			d\underline{x}_{V_a\backslash X_A} \propto
 			$$
 			$$
-			\int_{\underline{X}_B,\underline{X}_D,\underline{X}_C} \psi_{U,A} \psi_{B,A} \psi_{C,A} \psi_{V,C} \psi_{D,C}d\underline{x}_Bd\underline{x}_Dd\underline{x}_C =
+			\quad \int_{\underline{X}_B,\underline{X}_D,\underline{X}_C} \psi_{U,A} \psi_{B,A} \psi_{C,A} \psi_{V,C} \psi_{D,C}d\underline{x}_Bd\underline{x}_Dd\underline{x}_C =
 			$$
 			\pause
+			\vspace{1cm}
 			$$
-			\psi_{U,A} \int \psi_{B,A}d\underline{x}_B \int \psi_{C,A} \psi_{V,C}
-			\int \psi_{D,C}d\underline{x}_Dd\underline{x}_C=
+			\psi_{U,A} \int_{\underline{X}_B} \psi_{B,A}d\underline{x}_B \int_{\underline{X}_C} \psi_{C,A} \psi_{V,C}
+			\int_{\underline{X}_D} \psi_{D,C}d\underline{x}_Dd\underline{x}_C=
 			$$
 		\end{multicols}
 	\end{frame}
@@ -191,7 +193,7 @@
 		\begin{align*}
 			\text{Za } u,v \in V_a\text{: } &
 			\mu_{u \to v}\left(\underline{x}_v\right) \coloneqq
-			\int \psi_{u,v}\left(\underline{x}_u,\underline{x}_v\right)
+			\int_{\underline{X}_u} \psi_{u,v}\left(\underline{x}_u,\underline{x}_v\right)
 			\prod_{t\in N\left(u\right)\backslash v}
 			\mu_{t \to u}\left(\underline{x}_u\right)d\underline{x}_u
 			\\
@@ -202,13 +204,13 @@
 		\pause
 		$$
 		\Rightarrow
-		\psi_{U,A} \int \psi_{B,A}d\underline{x}_B \int \psi_{C,A} \psi_{V,C}
-		\int \psi_{D,C}d\underline{x}_Dd\underline{x}_C=
+		\psi_{U,A} \int_{\underline{X}_B} \psi_{B,A}d\underline{x}_B \int_{\underline{X}_C} \psi_{C,A} \psi_{V,C}
+		\int_{\underline{X}_D} \psi_{D,C}d\underline{x}_Dd\underline{x}_C=
 		$$
 		\pause
 		$$
 		\mu_{U \to A}\left(\underline{x}_A\right)\mu_{B \to A}\left(\underline{x}_A\right)
-		\int \psi_{C,A}
+		\int_{\underline{X}_C} \psi_{C,A}
 		\mu_{V \to C}\left(\underline{x}_C\right)
 		\mu_{D \to C}\left(\underline{x}_C\right)d\underline{x}_C=
 		$$
@@ -250,7 +252,7 @@
 		$$
 		$$
 		\mu_{v \to u}^{\left(i\right)}\left(\underline{x}_u\right) \coloneqq
-		\int \psi_{v,u}\left(\underline{x}_v,\underline{x}_u\right)
+		\int_{\underline{X}_v} \psi_{v,u}\left(\underline{x}_v,\underline{x}_u\right)
 		\frac{
 			M_v^{\left(i-1\right)}\left(\underline{x}_v\right)}{
 			\mu_{u \to v}^{\left(i-1\right)}\left(\underline{x}_v\right)
