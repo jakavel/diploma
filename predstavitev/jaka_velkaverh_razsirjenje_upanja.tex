@@ -29,7 +29,9 @@
 			Vemo lokacije od nekaterih naprav, tem rečemo sidra. Izračunati
 			želimo približke za lokacije ostalih, tem rečemo agenti.
 		\end{block}
+		Predpostavimo, da je omrežje naprav povezano.
 	\end{frame}
+
 	\begin{frame}
 		\frametitle{Verjetnostni pogled}
 		Oznake
@@ -63,6 +65,21 @@
 		\end{definicija}
 	\end{frame}
 
+	\note{
+		Intuitivno ima naš problem strukturo Markovskega polja.
+		Vozlišča identificiramo z naključnimi vektorji naprav, povežemo pa tista vozlišča,
+		ki so lahko izmerila medsebojno razdaljo. Če potem pogledamo dve nesosedni vozlišči,
+		pripadajoča vektorja gotovo ne bosta neodvisna, saj sta povezana z neko poti.
+		Vsak soseden par na tej poti je odvisen, torej bosta oba konca poti posredno
+		preko vseh vmesnih vozlišč odvisna.
+
+		Če pa fiksiramo vrednosti vseh vozlišč, pa bosta neodvisna. V tem primeru vozlišči
+		ne vplivata na sosede, saj imajo te fiksno vrednost, ker pa sama nista soseda,
+		bosta torej neodvisna.
+
+		Seveda je to samo intuitivnem nivoju.
+	}
+
 	\begin{frame}
 		\begin{block}{Hammersley–Cliffordov izrek}
 			Naj bo $G = \left(V, E\right)$ in $\underline{X}_v$ kot prej in dodatno
@@ -77,6 +94,13 @@
 		pripadajoče slučajne spremenljivke tvorile Markovsko polje.
 	\end{frame}
 
+	\note{
+		Izrek nam ob šibkem pogoju, da je gostota povsod pozitivna natanko opiše vse skupne
+		porazdelitve Markovskih polj.
+
+		Členom $\psi$ pravimo potenciali po vzoru iz fizike.
+	}
+
 	\begin{frame}
 		Za $\left\{u,v\right\} \in E$ in $d_{u,v}$ izmerjena razdalja definiramo
 		$$
@@ -88,13 +112,25 @@
 		$$
 		\psi_C\left(\underline{x}_C\right)=1
 		$$
-		Če imamo predhodne informacije o napravah jih lahko vstavimo v enojne potenciale.
+		Po izreku bo produkt takih potencialov skupna porazdelitev nekega slučajnega vektorja,
+		ki ima strukturo Markovskega polja.
 	\end{frame}
+
+	\note{
+		Problem se v resnici rešuje v obratni smeri. Najprej definiramo smiseln izraz,
+		ki ga želimo maksimizirati, nato pa opazimo, da je v resnici skupna gostota
+		neke porazdelitve, ki ima strukturo, ki jo je smiselno pričakovati od začetnega
+		problema.
+
+		V resnici se maksimiziranje produkta potencialov prevede na minimiziranje kvadrata
+		razlike razdalje, izračunane iz predvidenih lokacij naprav in izmerjene razdalje.
+		Torej smo začeli s problemom najmanjših kvadratov.
+	}
 
 	\begin{frame}
 		\begin{figure}[t]
 			\includegraphics[width=7cm]{"pairwise_potential.png"}
-			\caption{Primer potenciala parov, če enega od pozicij fiksiramo. Tu je izmerjena razdalja $10$, $\sigma$ pa $0{,}3$.}
+			\caption{Primer potenciala parov, če eno od pozicij fiksiramo. Tu je izmerjena razdalja $10$, $\sigma$ pa $0{,}3$.}
 			\centering
 		\end{figure}
 	\end{frame}
@@ -117,7 +153,15 @@
 		$$
 	\end{frame}
 
+	\note{
+		Skupna gostota je funkcija zelo veliko spremenljivk in je zato precej
+		okorna. Ljubše nam bi bilo, če bi jo lahko poenostavili na funkcijo vektorja
+		samo ene naprave. Ker problem rešujemo v okviru verjetnosti bomo to dosegli tako,
+		da izračunamo robno verjetnost (marginalization).
+	}
+
 	\begin{frame}
+		\frametitle{Razširjanje zaupanja na drevesih}
 		Poglejmo si primer, ko je graf drevo.
 		\setlength{\columnsep}{-3.5cm}
 		\begin{multicols}{2}
@@ -138,6 +182,10 @@
 			$$
 		\end{multicols}
 	\end{frame}
+
+	\note{
+		Tu na konkretnem primeru drevesa vidimo, da se integral skupne gostote poenostavi.
+	}
 
 	\begin{frame}
 		\begin{align*}
@@ -174,6 +222,25 @@
 		$$
 	\end{frame}
 
+	\note{
+		Če tu definiramo sporočila $\mu_{u \to v}$ med vozlišči, se računanje
+		robne gostote poenostavi na računanje sporočil. Ker usmerjeni grafi brez
+		ciklov premorejo topološko ureditev, je definicija sporočil dobra.
+		V vsakem drevesu obstaja zaporedje računanja sporočil, z katerim
+		imamo v vsakem koraku že izračunana vsa sporočila, ki so potrebna,
+		da izračunamo naslednje sporočilo.
+
+		Opazimo, da so sporočila v celoti lokalna. Za njihov izračun so
+		potrebna vsa ostala sporočila, ki so prišla do pošiljatelja in potencial
+		med pošiljateljem in prejemnikov, za katera pa moramo vedeti le izmerjeno
+		razdaljo med vozlišči. Dejansko lahko sporočila računamo distribuirano,
+		kar nam omogoči, da naravno uporabimo računsko moč vseh naprav v
+		velikem omrežju.
+
+		Opisan postopek ni izvedljiv za grafe s cikli, saj nam cikel da
+		krožne zahteve za izračun sporočil.
+	}
+
 	\begin{frame}
 		\frametitle{Za grafe s cikli}
 		Naj bosta $u,v \in V_a$, $i \in \mathbb{N}$ pa število iteracije.
@@ -191,6 +258,17 @@
 		$$
 		Za drevesa to konvergira k pravim vrednostim.
 	\end{frame}
+
+	\note{
+		Tu je potrebno dodati, da za $i=0$ vrednosti nastavimo na konstantno $1$.
+		Funkcijam $M$ pravimo zaupanje. Želimo, da bi konvergirali k robnim gostotam
+		porazdelitve.
+
+		Dejanskega zagotovila o konvergenci k pravim vrednostim nimamo.
+		V splošnem je problem točne marginalizacije NP - težek. V praksi se pa
+		izkaže (kar je tudi delno teoretično utemeljeno), da po nekaj iteracijah
+		zaupanje pride do razmeroma natančnih približkov za robne gostote.
+	}
 
 \end{document}
 
