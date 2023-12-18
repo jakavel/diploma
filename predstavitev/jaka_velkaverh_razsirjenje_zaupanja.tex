@@ -49,8 +49,8 @@
 			Nakjučna vektorja $\underline{X}, \underline{Y}$ sta pogojno
 			neodvisna ob $\underline{Z}$, če velja:
 			$$f_{\underline{X}, \underline{Y}}\left(\underline{x}, \underline{y}\ |\ \underline{Z} = \underline{z}\right) =
-			  f_{\underline{X}}\left(\underline{x}\ |\ \underline{Z} = \underline{z}\right) \
-			  f_{\underline{Y}}\left(\underline{y}\ |\ \underline{Z} = \underline{z}\right)
+        f_{\underline{X}|\underline{Z}}\left(\underline{x}\ |\ \underline{Z} = \underline{z}\right) \
+        f_{\underline{Y}|\underline{Z}}\left(\underline{y}\ |\ \underline{Z} = \underline{z}\right)
 			$$
 		\end{block}
 		\pause
@@ -248,7 +248,7 @@
 		Naj bosta $u,v \in V_a$, $i \in \mathbb{N}$ pa število iteracije.
 		$$
 		M_u^{\left(i\right)}\left(\underline{x}_u\right) \coloneqq
-		\prod_{t \in N\left(u\right)}\mu_{t \to u}\left(\underline{x}_u\right)
+    \prod_{t \in N\left(u\right)}\mu^{\left(i\right)}_{t \to u}\left(\underline{x}_u\right)
 		$$
 		$$
 		\mu_{v \to u}^{\left(i\right)}\left(\underline{x}_u\right) \coloneqq
