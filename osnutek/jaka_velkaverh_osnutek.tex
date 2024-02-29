@@ -1,0 +1,337 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{multicol}
+
+\title{Razširjanje zaupanja za lokalizacijo senzorskih omrežji (osnutek)}
+\author{Jaka Velkaverh\\Mentorja: Sergio Cabello, Tomaž Javornik}
+\date{\today}
+
+\newtheorem{definition}{Definicija}[section]
+\newtheorem{theorem}[definition]{Izrek}
+\newtheorem{statement}[definition]{Trditev}
+\newtheorem*{opomba}{Opomba}
+
+\begin{document}
+	\maketitle
+
+	\begin{abstract}
+		V osnutku opišemo teoretično osnovo za postopek lokalizacije senzorskih omrežji
+		z metodo razširjanja zaupanja. Formuliramo pojme potrebne za izpeljavo
+		postopka in ga izpeljemo v primeru, da je omrežje drevo.
+	\end{abstract}
+
+	\section{Uvod}
+	\subsection{Cilj}
+	V celem delu bomo predstavili algoritem za lokalizacijo senzorskih omrežji. Senzorsko
+	omrežje je sestavljeno iz več naprav. Napravam, katerih pozicija je znana,
+	pravimo sidra, ostalim pa agenti. Naprave izmerijo približno
+	medsebojno razdaljo, a je nekateri pari naprav zaradi prevelike razdalje ali
+	pregrad ne morejo. Iz točnih leg sider in izmerjenih razdalj želimo
+	izračunali približke za lege agentov.
+
+	\subsection{Oznake}
+	Omrežju naprav pripišemo graf $G = \left(V, E\right)$, kjer so vozlišča
+	naprave. Napravi sta povezani, če je bila njuna medsebojna razdalja izmerjena.
+	Lokacijo naprav $v \in V$ obravnavamo kot slučajno spremenljivko
+	$X_v$. To je dvorazsežni ali trirazsežni slučajni vektor, a ga
+	zaradi preglednosti ne bomo podčrtovali. Za neko podmnožico vozlišč
+	$S = \left\{v_1, \ldots, v_k\right\} \subseteq V$ označimo z
+	$\underline{X}_S$ slučajni vektor $\left(X_{v_1}, \ldots, X_{v_k}\right)$.
+
+	\section{Markovska polja}
+	Osnovna lastnost, ki bo vodila v Markovska polja je pogojna neodvisnost. Pogojna
+	neodvisnost je šibkejša lastnost od neodvisnosti.
+
+	Naj bodo  $X$, $Y$, $Z$ slučajne spremenljivke. Z pogojno neodvisnostjo
+	$X$ in $Y$ ob $Z$ hočemo povedati, da $X$ in $Y$ nimata neposrednega vpliva
+	drug na drugega in da je edini posredni vpliv tisti, ki gre "`skozi"' $Z$.
+	Torej če fiksiramo vrednost $Z$, bosta spremenljivki $X$ in $Y$ neodvisni.
+	Vrednosti ene nam nič ne povejo o vrednostih druge, saj je posreden vpliv
+	"`blokiran"' z fiksiranim $Z$.
+
+	\begin{definition}
+		Nakjučna vektorja $\underline{X}, \underline{Y}$ s pogojnima gostotama
+		$f_{\underline{X}|\underline{Z}}$, $f_{\underline{Y}|\underline{Z}}$ sta pogojno
+		neodvisna ob $\underline{Z}$, če za skupno pogojno gostoto velja:
+		$$
+		\forall \underline{z}. \quad
+		f_{\underline{X}, \underline{Y}|\underline{Z}}\left(\underline{x}, \underline{y}\ |\ \underline{Z} = \underline{z}\right) =
+		f_{\underline{X}|\underline{Z}}\left(\underline{x}\ |\ \underline{Z} = \underline{z}\right) \
+		f_{\underline{Y}|\underline{Z}}\left(\underline{y}\ |\ \underline{Z} = \underline{z}\right)
+		$$
+	\end{definition}
+
+	Z tem pojmom lahko definiramo Markovsko polje. Glavna ideja je, da želimo z
+	grafom ponazoriti medsebojne odvisnosti več naključnih spremenljivk. Ne
+	moremo zahtevati, da so nesosednje spremenljivke neodvisne, ker so
+	lahko spremenljivke iz iste komponente za povezanost odvisne posredno.
+	Če pa fiksiramo vse ostale spremenljivke, pa lahko pričakujemo, da bosta
+	nesosednji spremenljivki neodvisni, saj smo se znebili posrednih vplivov.
+
+	\begin{definition}
+		Naj bo $G = \left(V, E\right)$, $V = \left\{v_1, v_2, \ldots, v_n\right\}$
+		in slučajne spremenljivke $\underline{X}_V = \left(X_{v_1}, X_{v_2}, \ldots, X_{v_n}\right)$.
+		Spremenljivke $\underline{X}_V$ in graf $G$ tvorijo \emph{Markovsko polje}, ko
+		sta za vsaka nesosedna $u, v \in V$, $uv \notin E$ pripadajoči spremenljivki $X_u$ in $X_v$ pogojno neodvisni ob
+		vseh ostalih spremenljivkah $\underline{X}_{V\backslash\left\{u, v\right\}}$.
+	\end{definition}
+	\begin{opomba}
+		Pogoj zgoraj se imenuje parna lastnost Markova. Obstajata še lokalna in
+		globalna lastnost Markova, ki sta strožji, a ju v tem delu ne potrebujemo.
+	\end{opomba}
+
+	\begin{samepage}
+		\begin{theorem}[Hammersley–Clifford]
+			Naj bo $G = \left(V, E\right)$ graf in $\underline{X}_V$ zvezno porazdeljene naključne spremenljivke, ki pripadajo vozliščem.
+			Dodatno $\forall \underline{x}_V.\;f_{\underline{X}_V}\left(\underline{x}_V\right) > 0$.
+			Tedaj $G$ in $\underline{X}_V$ tvorita Markovsko polje natanko tedaj,
+			ko se skupna gostota faktorizira po klikah grafa $G$:
+			$$f_{\underline{X}_V}\left(\underline{x}_V\right) \propto
+			\prod_{C\;\text{klika}\;G}\psi_C\left(\underline{x}_C\right)$$
+		\end{theorem}
+
+		Ni dokaza. Nekaj komentarjev glede izreka:
+		\begin{itemize}
+			\item $f\left(x\right) \propto g\left(x\right)$ pomeni
+			$\exists C \in \mathbb{R}\backslash\left\{0\right\}.\;\forall x.\;f\left(x\right) = C\cdot g\left(x\right)$
+			\item Funkcijam $\psi_C$ pravimo potenciali.
+		\end{itemize}
+	Definicija in izrek prihajata iz \cite{Bishop}.
+	\end{samepage}
+
+	\section{Skupna gostota}
+	Kot prej naj bo $G = \left(V, E\right)$ in za $uv \in E$ naj bodo
+	$d_{u,v}$ fiksne izmerjene razdalje.
+	Iščemo take vektorje $\underline{x}_V$.
+	ki minimizirajo kvadrate napak med izmerjenimi in predvidenimi razdaljami.
+	Minimiziramo torej t.~i.\ funkcijo energije:
+	$$E\left(\underline{x}_V\right) = \sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2$$
+	V to vsoto vključimo le enega od členov $uv$ in $vu$. Funkcijo energije lahko komponiramo s strogo padajočo funkcijo $e^{-x}$, zdaj maksimiziramo
+	$$P\left(\underline{x}_V\right) = exp\left[-\sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2\right] =
+	\prod_{uv \in E}e^{-\left(\left|x_u - x_v\right|-d_{u,v}\right)^2}.$$
+	Če zdaj definiramo potenciale
+	$\psi_{u,v}\left(x_u, x_v\right) = e^{-\left(\left|x_u - x_v\right|-d_{u,v}\right)^2}$ dobimo
+	$$P\left(\underline{x}_V\right) = \prod_{uv \in E}\psi_{u,v}\left(x_u, x_v\right)$$
+	Seveda je vsak par povezanih vozlišč klika grafa. Če dodatno za vse klike
+	$C$, ki niso par vozlišč definiramo $\psi_C\left(x_C\right) = 1$ lahko zapišemo:
+	$$P\left(\underline{x}_V\right) = \prod_{C\;\text{klika}\;G}\psi_C\left(\underline{x}_C\right)$$
+
+	Dobljena funkcija $P$ je zvezna, strogo pozitivna in omejena navzgor z $1$.
+	Če vrednosti $\underline{x}_V$ omejimo na množico $A$ s končnim volumnom,
+	npr.\ $A = B\left(0, R\right), R>0$, bo integral
+	$I = \int_{A}P\left(\underline{x}_V\right)d\underline{x}_V$ neničeln in omejen
+	navzgor z volumnom $A$. Definiramo lahko torej funkcijo
+	$\tilde{P}\left(\underline{x}_V\right) = P\left(\underline{x}_V\right) / I$,
+	katere integral po $A$ bo enak $1$. Funkcija $\tilde{P}$ zadošča vsem pogojem
+	gostote zvezno porazdeljenega slučajnega vektorja, zato lahko definiramo
+	$\underline{X}_V$ kot slučajni vektor z gostoto $\tilde{P}$. Lege naprav,
+	ki minimizirajo kvadrate napak, so zdaj maksimumi gostote
+	$f_{\underline{X}_V}\left(\underline{x}_V\right)$.
+
+	Označimo $V_a$ kot množico agentov (neznane lege) in $V_s$ kot
+	množico sider (znane lege). Radi bi našli take lege agentov
+	$\underline{x}_{V_a}$, ki minimizirajo kvadrate napak upoštevajoč znane
+	lege sider. Če označimo $\underline{y}_{V_s}$ fiksne znane lege sider, želimo
+	minimizirati $E\left(\underline{x}_{V_a}, \underline{y}_{V_s}\right)$. To
+	je ekvivalentno maksimiziranju pogojne gostote
+	$f_{\underline{X}_{V_a}|\underline{X}_{V_s}}\left(\underline{x}_{V_a} | \underline{X}_{V_s}=\underline{y}_{V_s}\right)$,
+	saj je
+	$$f_{\underline{X}_{V_a}|\underline{X}_{V_s}}\left(\underline{x}_{V_a} | \underline{X}_{V_s}=\underline{y}_{V_s}\right) =
+	f_{\underline{X}_{V}}\left(\underline{x}_{V_a}, \underline{y}_{V_s}\right)/f_{\underline{X}_{V_s}}\left(\underline{y}_{V_s}\right) \propto
+	f_{\underline{X}_{V}}\left(\underline{x}_{V_a}, \underline{y}_{V_s}\right) =
+	\tilde{P}\left(\underline{x}_{V_a}, \underline{y}_{V_s}\right)
+	$$
+
+	Ker smo gostoto $\underline{X}_V$ definirali kot produkt potencialov, bo po
+	Hammersley-Cliffordovem izreku $G$ in $\underline{X}_V$ Markovsko polje.
+	Iskanje najbolj verjetne vrednosti v Markovskem polju je problem,
+	ki se ga pogosto rešuje z razširjanjem zaupanja.
+
+	V tej izpeljavi so bili potenciali izbrani po vzoru \cite{chapter26} in \cite{mitdiploma}.
+
+	\section{Razširjanje zaupanja v drevesih}
+	Želimo torej izračunati maksimum
+	$$
+	f_{\underline{X}_{V_a} | \underline{X}_{V_s}}\left(\underline{x}_{V_a} | \underline{X}_{V_s} = \underline{y}_{V_s}\right) \propto
+	\prod_{\substack{\left\{u,v\right\} \in E \\ u,v \text{ agenta}}}\psi_{u,v}\left(x_u,x_v\right)
+	\prod_{\substack{\left\{u,v\right\} \in E \\ u\text{ agent}, v \text{ sidro}}}\psi_{u,v}\left(x_u,y_v\right).
+	$$
+	To bomo dosegli z razširjanjem zaupanja, cilj te metode so robne gostote
+	$$
+	f_{X_v | \underline{X}_{V_s}}\left(x_v | \underline{X}_{V_s} = \underline{y}_{V_s}\right).
+	$$
+	Če bi robno gostoto računali z integriranjem bi morali razrešiti
+	$\left|V_a\right|-1$ dimenzionalni integral, kar je neugodno.
+
+	Definiramo sporočilo med sosednjima vozliščema $uv \in E$, ki nista oba
+	sidri, kot v \cite{Bishop}, \cite{chapter26}, \cite{mitdiploma}:
+	\begin{align*}
+		\text{Za } u,v \in V_a\text{: } &
+		\mu_{u \to v}\left(x_v\right) \coloneqq
+		\int_{X_u} \psi_{u,v}\left(x_u,x_v\right)
+		\prod_{t\in N\left(u\right)\backslash v}
+		\mu_{t \to u}\left(x_u\right)dx_u ,
+		\\
+		\text{za }u \in V_s\text{ in }v \in V_a\text{: } &
+		\mu_{u \to v}\left(x_v\right) \coloneqq
+		\psi_{u,v}\left(y_u,x_v\right).
+	\end{align*}
+	Poudarili bi, da so sporočila za razliko potencialov nesimentrična.
+	Sporočilo $\mu_{u \to v}$ je funkcija lege prejemnika $x_v$. Razumemo jo kot
+	ocena pošiljatelja $u$ o verjetnosti lege $x_v$ glede na informacije, ki
+	jih ima $u$ na voljo. Produkt $\prod_{t\in N\left(u\right)\backslash v}
+	\mu_{t \to u}\left(x_u\right)$ vseh sporočil, ki
+	jih prejme $u$ razen tistega od $v$ oceni kako verjetna je lega $x_u$.
+	Potencial $\psi_{u,v}\left(x_u,x_v\right)$ pa za
+	obravnavano lego $x_u$ oceni lego $x_v$ z uporabo njune izmerjene medsebojne
+	razdalje. Integriranje razumemo kot računanje robne gostote, tako da dobimo
+	funkcijo, ki je odvisna samo od lege $x_v$.
+
+	Definicija sporočila je rekurzivna, za izračun sporočila potrebujemo druga
+	sporočila. Naravno se je vprašati, če se ta rekurzija kdaj konča, torej
+	če lahko sploh izračunamo vsa sporočila.
+	\begin{statement}
+		\label{sporocila_drevo}
+		Naj bo $G = \left(V, E\right)$ drevo, $\left|V\right| = n$, $\left|E\right| = m$, $V = V_a \cup V_s = \left\{v_1, \ldots, v_n\right\}$
+		in sporočila definirana kot zgoraj.
+		Obstaja taka ureditev
+		$\left(v_{i_1}, v_{j_1}\right), \ldots, \left(v_{i_{2m}}, v_{j_{2m}}\right)$ urejenih
+		parov $\left(v_i, v_j\right)$, ki ustrezajo povezavam $v_iv_j \in E$,
+		da lahko na vsakem koraku $k = 1, \ldots, 2m$ izračunamo sporočilo
+		$\mu_{v_{i_k} \to v_{j_k}}$ z že izračunanimi sporočili.
+	\end{statement}
+	\begin{proof}
+		Delamo indukcijo po $m$. \\
+		Najprej $m = 1$. \\
+		Sporočilo se izračuna bodisi tako, da
+		ustavimo $y_u$ v $\psi_{u,v}$, kar lahko vedno naredimo, bodisi tako,
+		da se integrira
+		$\int_{X_u} \psi_{u,v}\left(x_u,x_v\right) \prod_{t\in N\left(u\right)\backslash v} \mu_{t \to u}\left(x_u\right)dx_u$,
+		a je množica v produkti prazna, zato je integral enak
+		$\int_{X_u} \psi_{u,v}\left(x_u,x_v\right)dx_u$,
+		kar lahko izračunamo.\\
+		Predpostavimo, da trditev velja za $m$ in pokažimo, da velja za $m+1$. \\
+		Naj bo $s \in V$ list in $v \in V$ njegov edini sosed
+		in naj bo $\left(v_{i_1}, v_{j_1}\right), \ldots, \left(v_{i_{2m}}, v_{j_{2m}}\right)$,
+		ureditev v podgrafu $G\backslash s$, ki obstaja po indukcijski
+		predpostavki. Trdimo da je ureditev
+		$\left(s, v\right), \left(v_{i_1}, v_{j_1}\right), \ldots, \left(v_{i_{2m}}, v_{j_{2m}}\right), \left(v, s\right)$
+		dobra za cel graf $G$.
+		Najprej izračunamo
+		$\mu_{s \to v}\left(x_v\right) = \int_{X_s} \psi_{s,v}\left(x_s,x_v\right)dx_s$.
+		Za izračun sporočil med $V\backslash s$ ne potrebujemo $\mu_{v \to s}$,
+		saj $s \notin V\backslash s$ (v izračunu sporočila, katerega pošiljatelj
+		je $u \in V$, potrebujemo le taka sporočila, katerih prejemnik je $u$).
+		Lahko torej po vrstnem redu, ki obstaja zaradi I.~P.,
+		izračunamo vsa sporočila med vozlišči v $V\backslash s$.
+		Ko smo končali s tem, imamo izračunana vsa ostala sporočila,
+		zato lahko izračunamo tudi $\mu_{v \to s}$.
+
+	\end{proof}
+
+	Definiramo še zaupanje
+	$M_u\left(x_u\right) \coloneqq
+	\prod_{t \in N\left(u\right)}\mu_{t \to u}\left(x_u\right)$,
+	ki je produkt vseh prejetih sporočil. Ta po prejšnjem načinu razmišljanja
+	 predstavlja oceno lege $x_u$ glede na podatke vseh
+	njegovih sosedov. Pokažimo, da je ta način razmišljanja utemeljen.
+
+	\begin{theorem}
+		Naj veljajo enake predpostavke kot v trditvi \ref{sporocila_drevo} in
+		zaupanju definiranem kot zgoraj.
+		Za vsak $v \in V_a$ je zaupanje proporcionalno robni gostoti.
+		$$
+		M_v\left(x_v\right) \propto f_{X_v | \underline{X}_{V_s}}\left(x_v | \underline{X}_{V_s} = \underline{y}_{V_s}\right).
+		$$
+	\end{theorem}
+	\begin{proof}
+		V osnutku bomo dokazali le za $V_s = \emptyset$, sicer velja v splošnem.
+		Fiksiramo $v \in V$.\\
+		Vemo, da so poti v drevesu enolične. Za vsak $u \in V\backslash v$
+		lahko torej definiramo $T^u = \left(V^u, E^u\right)$ kot poddrevo
+		vozlišč, za katere pot od $v$ do njih vodi skozi $u$
+		(vključimo $u \in V^u$) in to obravnavamo kot drevo s korenom $u$.
+		Za $u \neq v$ definiramo $u^+$ kot prvi sosed $u$ na poti
+		od $u$ do $v$ (lahko je tudi $u^+ = v$). Velja $u^+ \notin V^u$.
+		Trdimo, da je za $u \neq v$
+		$$\mu_{u \to u^+}\left(x_{u^+}\right) =
+		\int_{\underline{X}_{V^u}} \psi_{u,u^+}\left(x_u,x_{u^+}\right) \prod_{ts \in E^u} \psi_{t, s}\left(x_t, x_s\right)d\underline{x}_{V^u}.
+		$$
+		Produkt zgoraj razumemo tako, da se v njem pojavi le eden od
+		$\psi_{t, s}$ in $\psi_{s, t}$.
+		To bomo pokazali z indukcijo po globini $r$ drevesa $T^u$ s korenom $u$.\\
+		Najprej $r = 0$.\\
+		Tedaj je $V^u = \left\{u\right\}$, povezav pa ni. Trditev dobi
+		obliko
+		$\mu_{u \to u^+}\left(x_{u^+}\right) = \int_{X_u} \psi_{u,u^+}\left(x_u,x_{u^+}\right)dx_u$,
+		kar je definicija sporočila, če je pošiljatelj list.\\
+		Predpostavimo, da velja za vsa poddrevesa globine $r$ in dokažimo, da
+		velja za $r+1$.\\
+		Po definiciji sporočila je
+		$$\mu_{u \to u^+}\left(x_{u^+}\right) =
+		\int_{X_u} \psi_{u,u^+}\left(x_u,x_{u^+}\right) \prod_{t\in N\left(u\right)\backslash u^+} \mu_{t \to u}\left(x_u\right)dx_u.
+		$$
+		Za $t\in N\left(u\right)\backslash u^+$ so pa poddrevesa $T^t$ velikosti
+		$r$, zato lahko uporabimo indukcijsko predpostavko. Opazimo tudi $t^+ = u$
+		za $t\in N\left(u\right)\backslash u^+$ in preuredimo zgornjo enačbo v
+		$$
+		\int_{X_u} \psi_{u,u^+}\left(x_u,x_{u^+}\right) \prod_{t\in N\left(u\right)\backslash u^+}
+		\int_{\underline{X}_{V^t}} \psi_{t,u}\left(x_t,x_u\right) \prod_{ks \in E^t} \psi_{k, s}\left(x_k, x_s\right)d\underline{x}_{V^t}dx_u.
+		$$
+		Velja pa $ V^u = \left\{u\right\} \cup \bigcup_{t\in N\left(u\right)\backslash u^+}V^t$ in
+		$E^u = \bigcup_{t\in N\left(u\right)\backslash u^+}\left(E^t \cup tu\right)$
+		in vse te unije so disjunktne.
+		Lahko torej integrale zgoraj združimo v
+		$$
+		\int_{\underline{X}_{V^u}} \psi_{u,u^+}\left(x_u,x_{u^+}\right)
+		\prod_{ts \in E^u} \psi_{t, s}\left(x_t, x_s\right)d\underline{x}_{V^u}.
+		$$
+		To je pa formula, ki jo želimo pokazati.
+
+		Po dokazanem bo
+		$$
+		M_v\left(x_v\right) =
+		\prod_{u \in N\left(v\right)}\mu_{u \to v}\left(x_v\right) =
+		\prod_{u \in N\left(v\right)}
+		\int_{\underline{X}_{V^u}} \psi_{u,v}\left(x_u,x_v\right) \prod_{ts \in E^u} \psi_{t, s}\left(x_t, x_s\right)d\underline{x}_{V^u}.
+		$$
+		Podobno kot zgoraj razmislimo, da velja
+		$$
+		\left\{v\right\} \cup \bigcup_{u \in N\left(v\right)}V^u = V\quad,\quad
+		\bigcup_{u \in N\left(v\right)}\left(E^u \cup uv\right) = E.
+		$$
+		Zato lahko integrale in produkte v zgornji enačbi združimo v
+		$$
+		\int_{\underline{X}_{V\backslash v}} \prod_{ts \in E} \psi_{t, s}\left(x_t, x_s\right)d\underline{x}_{V\backslash v}
+		$$
+		Če se spomnimo definicije slučajne spremenljivke $\underline{X}_V$, je
+		$$
+		\int_{\underline{x}_{V\backslash v}} \prod_{ts \in E} \psi_{t, s}\left(x_t, x_s\right)d\underline{x}_{V\backslash v} \propto
+		\int_{\underline{x}_{V\backslash v}} f_{\underline{X}_V}\left(\underline{x}_V\right)d\underline{x}_{V\backslash v}.
+		$$
+		Na desni ni pa nič drugega kot
+		$$
+		f_{X_v}\left(x_v\right).
+		$$
+	\end{proof}
+
+	\newpage
+	\begin{thebibliography}{9}
+		\bibitem{Bishop}
+		C.~Bishop, \emph{Pattern recognition and machine learning}, Springer, New York, 2006. (poglavji 8.3 in 8.4)
+		\bibitem{chapter26}
+		V.~Savic in S.~Zazo, \emph{Belief propagation techniques for cooperative localization in wireless sensor networks} iz \emph{Handbook of position location: theory, practice, and advances}, Wiley-IEEE Press, 2019.
+		\bibitem{mitdiploma}
+		A.~Ihler, \emph{Inference in sensor networks: graphical models and particle methods},
+		doktorsko delo, Department of electrical engineering and computer science, Massachusetts institute of technology, 2005.
+
+	\end{thebibliography}
+
+
+\end{document}
+
