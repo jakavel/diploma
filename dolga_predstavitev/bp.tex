@@ -1,0 +1,64 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{multicol}
+\usepackage{mathtools}
+\renewcommand{\vec}{\underline}
+\usetheme{Madrid}
+\setbeamertemplate{navigation symbols}{}
+
+\title[Razširjanje zaupanja]{Razširjanje zaupanja za lokalizacijo senzorskih omrežji}
+\author[Jaka Velkaverh]{Jaka Velkaverh\\Mentorja: Sergio Cabello, Tomaž Javornik}
+\date{22.3.2024}
+
+\theoremstyle{definition}
+\newtheorem{definicija}{Definicija}
+
+\begin{document}
+
+	\frame{\titlepage}
+
+	\begin{frame}
+		\frametitle{Cilj}
+		\begin{block}{Lokalizacija senzorskega omrežja}
+			Omrežje si predstavljamo kot utežen graf, kjer so naprave vozlišča.
+			Dve vozlišči sta povezani, če sta pripadajoči napravi dovolj blizu,
+			da lahko izmerita razdaljo. Utež povezav je izmerjena razdalja,
+			kjer pri merjenju pride do napak.
+
+			Vemo lokacije od nekaterih naprav, tem rečemo sidra. Izračunati
+			želimo približke za lokacije ostalih, tem rečemo agenti.
+		\end{block}
+		Predpostavimo, da je omrežje naprav povezano.
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Oznake}
+		Oznake
+		\begin{itemize}
+			\item Vozlišča označujemo z črkami $u, v, s \in V$.
+			\item $x_u \in \mathbb{R}^n\;;\;n=2, 3$ lokacija naprave u.
+			\item Za $A \coloneqq \left\{v_1, v_2, \ldots, v_k\right\} \subseteq V$ je
+				$\vec{x}_A = \left(x_{v_1}, x_{v_2}, \ldots, x_{v_k}\right)$
+			\item Za $uv \in E$ je $d_{u,v}$ izmerjena razdalja.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}
+		$$E\left(\vec{x}_V\right) \coloneqq \sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2$$
+		\pause
+		$$P\left(\vec{x}_V\right) = exp\left[-\sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2\right] =
+		\prod_{uv \in E}e^{-\left(\left|x_u - x_v\right|-d_{u,v}\right)^2}$$
+		\pause
+		Omejimo na $S \subseteq \mathbb{R}^{n\cdot \left|V\right|}$ s končnim volumnom.
+		$$\tilde{P}\left(\vec{x}_V\right) = \left(\int_S P\left(\vec{z}_V\right)d\vec{z}_V\right)^{-1}
+		P\left(\vec{x}_V\right)$$
+		\pause
+		$\vec{X}_V$ zvezno porazdeljen slučajni vektor z gosto $\tilde{P}$.
+
+	\end{frame}
+
+\end{document}
+
