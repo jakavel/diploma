@@ -51,13 +51,57 @@
 		\pause
 		$$P\left(\vec{x}_V\right) = exp\left[-\sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2\right] =
 		\prod_{uv \in E}e^{-\left(\left|x_u - x_v\right|-d_{u,v}\right)^2}$$
+		$$
+		= \prod_{uv \in E}\psi_{u,v}\left(x_u,x_v\right)
+		$$
 		\pause
 		Omejimo na $S \subseteq \mathbb{R}^{n\cdot \left|V\right|}$ s končnim volumnom.
 		$$\tilde{P}\left(\vec{x}_V\right) = \left(\int_S P\left(\vec{z}_V\right)d\vec{z}_V\right)^{-1}
 		P\left(\vec{x}_V\right)$$
 		\pause
 		$\vec{X}_V$ zvezno porazdeljen slučajni vektor z gosto $\tilde{P}$.
+	\end{frame}
 
+	\begin{frame}
+		\frametitle{Markovska polja}
+		\begin{block}{Pogojna neodvisnost}
+			Nakjučna vektorja $\vec{X}, \vec{Y}$ sta pogojno
+			neodvisna ob $\vec{Z}$, če velja:
+			$$f_{\vec{X}, \vec{Y}|\vec{Z}}\left(\vec{x}, \vec{y}\ |\ \vec{Z} = \vec{z}\right) =
+			f_{\vec{X}|\vec{Z}}\left(\vec{x}\ |\ \vec{Z} = \vec{z}\right) \
+			f_{\vec{Y}|\vec{Z}}\left(\vec{y}\ |\ \vec{Z} = \vec{z}\right)
+			$$
+		\end{block}
+		\pause
+		\begin{definicija}
+			Graf $G = \left(V, E\right)$, in naključni slučajni vektorji
+			$\vec{X}_v$, indeksirani z $v \in V$ tvorijo Markovsko polje,
+			če velja Markova lastnost po parih:
+
+			Za vsaka nesosedna $u, v \in V$ sta $\vec{X}_u$, $\vec{X}_v$
+			pogojno neodvisna ob vseh ostalih
+			$\vec{X}_{V\backslash\left\{u, v\right\}}$
+		\end{definicija}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{$\vec{X}_V$ je Markovsko polje}
+		Za nesosednja $u, v \in V$ je
+		$$
+		f_{x_u,x_v|\vec{X}_{V\backslash \left\{u,v\right\}}}
+			\left(x_u,x_y | \vec{X}_{V\backslash \left\{u,v\right\}} = \vec{y}_{V\backslash \left\{u,v\right\}}\right) \propto
+		$$
+		\pause
+		$$
+		\propto \prod_{su \in E}\psi_{s,v}\left(y_s,x_u\right)
+			\prod_{sv \in E}\psi_{s,v}\left(y_s,x_v\right)
+			\prod_{\substack{\left\{s,t\right\} \in E \\ \left\{s,t\right\}\cap \left\{u,v\right\} = \emptyset}}\psi_{s,v}\left(y_s,y_t\right)
+			\propto
+		$$
+		\pause
+		$$
+		\propto g\left(x_u\right) h\left(x_v\right) \Rightarrow X_u, X_v \text{ pogojno neodvisna ob } \vec{X}_{V\backslash \left\{u,v\right\}}
+		$$
 	\end{frame}
 
 \end{document}
