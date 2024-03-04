@@ -15,6 +15,7 @@
 
 \theoremstyle{definition}
 \newtheorem{definicija}{Definicija}
+\newtheorem{izrek}{Izrek}
 
 \begin{document}
 
@@ -102,6 +103,100 @@
 		$$
 		\propto g\left(x_u\right) h\left(x_v\right) \Rightarrow X_u, X_v \text{ pogojno neodvisna ob } \vec{X}_{V\backslash \left\{u,v\right\}}
 		$$
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Razširjanje zaupanja na drevesih}
+		Poglejmo si primer, ko je graf drevo.
+		\setlength{\columnsep}{-5cm}
+		\begin{multicols}{2}
+			\includegraphics[width=4cm]{message_passing.pdf}
+			\columnbreak{}
+
+			\vspace{5cm}
+			$$
+			\int_{\vec{X}_{V_a \backslash \left\{A\right\}}} f_{\vec{X}_{V_a} | \vec{X}_{V_s}}\left(\vec{x}_{V_a} | \vec{x}_{V_s} = vec{y}_{V_s}\right)
+			d\vec{x}_{V_a \backslash \left\{A\right\}}\propto
+			$$
+			$$
+			\quad \int_{X_B,X_D,X_C} \psi_{U,A} \psi_{B,A} \psi_{C,A} \psi_{V,C} \psi_{D,C}dx_Bdx_Ddx_C =
+			$$
+			\pause
+			\vspace{1cm}
+			$$
+			\psi_{U,A} \int_{X_B} \psi_{B,A}dx_B \int_{X_C} \psi_{C,A} \psi_{V,C}
+			\int_{X_D} \psi_{D,C}dx_Ddx_C
+			$$
+		\end{multicols}
+	\end{frame}
+
+	\begin{frame}
+		\begin{align*}
+			\text{Za } u,v \in V_a\text{: } &
+			\mu_{u \to v}\left(x_v\right) \coloneqq
+			\int_{X_u} \psi_{u,v}\left(x_u,x_v\right)
+			\prod_{t\in N\left(u\right)\backslash v}
+			\mu_{t \to u}\left(x_u\right)dx_u
+			\\
+			\text{Za }u \in V_s\text{ in }v \in V_a\text{: } &
+			\mu_{u \to v}\left(x_v\right) \coloneqq
+			\psi_{u,v}\left(y_u,x_v\right)
+		\end{align*}
+		\pause
+		$$
+		\Rightarrow
+		\psi_{U,A} \int_{X_B} \psi_{B,A}dx_B \int_{X_C} \psi_{C,A} \psi_{V,C}
+		\int_{X_D} \psi_{D,C}dx_Ddx_C=
+		$$
+		\pause
+		$$
+		\mu_{U \to A}\left(x_A\right)\mu_{B \to A}\left(x_A\right)
+		\int_{X_C} \psi_{C,A}
+		\mu_{V \to C}\left(x_C\right)
+		\mu_{D \to C}\left(x_C\right)dx_C=
+		$$
+		\pause
+		$$
+		\mu_{U \to A}\left(x_A\right)\mu_{B \to A}\left(x_A\right)
+		\mu_{C \to A}\left(x_A\right) =
+		$$
+		$$
+		\prod_{u \in N\left(A\right)}\mu_{u \to A}\left(x_A\right) \eqqcolon M_A\left(x_A\right)
+		$$
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Pravilnost razširjanja zaupanja na drevesih}
+		\begin{izrek}
+			Naj bo $G = \left(V, E\right)$ drevo in $V_a$, $V_s$, $\vec{X}_V$,
+			$\vec{y}_{V_s}$ in $M_u\left(x_u\right)$ kot prej.
+			Zaupanje je proporcionalno robni gostoti
+			$$
+			M_u\left(x_u\right) \propto f_{X_u | \vec{X}_{V_s}}\left(x_u | \vec{X}_{V_s} = \vec{y}_{V_s}\right).
+			$$
+		\end{izrek}
+		Ideja dokaza so poddrevesa osnovnega drevesa s korenom v $u$.
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Za grafe s cikli}
+		Naj bosta $u,v \in V_a$, $i \in \mathbb{N}$ pa število iteracije.
+		$$
+		M_u^{\left(i\right)}\left(x_u\right) \coloneqq
+		\prod_{t \in N\left(u\right)}\mu^{\left(i\right)}_{t \to u}\left(x_u\right)
+		$$
+		$$
+		\mu_{v \to u}^{\left(i\right)}\left(x_u\right) \coloneqq
+		\int_{X_v} \psi_{v,u}\left(x_v,x_u\right)
+		\frac{
+			M_v^{\left(i-1\right)}\left(x_v\right)}{
+			\mu_{u \to v}^{\left(i-1\right)}\left(x_v\right)
+		}dx_v
+		$$
+		Za $v \in V_s$, $u \in V_a$ je pa
+		$\mu_{v \to u}^{\left(i\right)}\left(x_u\right) \coloneqq \psi_{v,u}\left(y_v, x_u\right)$
+
+		Za drevesa to konvergira k pravim vrednostim.
 	\end{frame}
 
 \end{document}
