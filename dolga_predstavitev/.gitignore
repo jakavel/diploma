@@ -3,6 +3,7 @@
 *.nav
 *.out
 *.pdf
+!message_passing.pdf
 *.snm
 *.synctex.gz
 *.toc
