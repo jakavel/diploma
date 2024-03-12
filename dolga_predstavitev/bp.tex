@@ -63,6 +63,20 @@
     $\vec{X}_V$ zvezno porazdeljen slučajni vektor z gosto $\tilde{P}$.
   \end{frame}
 
+  \note{
+    Najprej definiramo t.i.\ funkcijo energije $E$, ki predvidenim lokacijam
+    naprav predpiše pozitivno število, ki je majhno, če so medsebojne razdalje
+    blizu predvidenim. Smiselno bi bilo proglasiti predvidene lege kot tiste,
+    ki minimizerajo to funkcijo.
+
+    Nato funkcijo energije komponiramo s padajočo funkcijo $e^{-x}$, da dobimo
+    funkcijo $P$ z vrednostmi v $(0, 1]$. Če smo funkcijo $E$ minimizerali,
+    bomo funkcijo $P$ maksimizirali. Če se z vrednostmi $\vec{x}_V$ omejimo,
+    jo lahko še normaliziramo. Tako lahko z njo kot gostoto definiramo slučajni
+    vektor $\vec{X}_V$. Iščemo torej najbolj verjetno lego slučajnega vektorja
+    $\vec{X}_V$.
+  }
+
   \begin{frame}
     \frametitle{Markovska polja}
     \begin{block}{Pogojna neodvisnost}
@@ -77,7 +91,7 @@
     \begin{definicija}
       Graf $G = \left(V, E\right)$, in naključni slučajni vektorji
       $\vec{X}_v$, indeksirani z $v \in V$ tvorijo Markovsko polje,
-      če velja Markova lastnost po parih:
+      če velja Markovska lastnost po parih:
 
       Za vsaka nesosedna $u, v \in V$ sta $\vec{X}_u$, $\vec{X}_v$
       pogojno neodvisna ob vseh ostalih
@@ -104,6 +118,13 @@
     \propto g\left(x_u\right) h\left(x_v\right) \Rightarrow X_u, X_v \text{ pogojno neodvisna ob } \vec{X}_{V\backslash \left\{u,v\right\}}
     $$
   \end{frame}
+
+  \note{
+    Tu pokažem, da gostota $\vec{X}_V$ zadošča Markovski lastnosti po parih.
+
+    V prejšnji predstavitvi sem se tu skliceval na Hammersley-Cliffordov izrek,
+    ampak sem šel to raje dokazal direktno, ker je tu precej nepotreben.
+  }
 
   \begin{frame}
     \frametitle{Razširjanje zaupanja na drevesih}
