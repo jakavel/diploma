@@ -19,185 +19,185 @@
 
 \begin{document}
 
-	\frame{\titlepage}
+  \frame{\titlepage}
 
-	\begin{frame}
-		\frametitle{Cilj}
-		\begin{block}{Lokalizacija senzorskega omrežja}
-			Omrežje si predstavljamo kot utežen graf, kjer so naprave vozlišča.
-			Dve vozlišči sta povezani, če sta pripadajoči napravi dovolj blizu,
-			da lahko izmerita razdaljo. Utež povezav je izmerjena razdalja,
-			kjer pri merjenju pride do napak.
+  \begin{frame}
+    \frametitle{Cilj}
+    \begin{block}{Lokalizacija senzorskega omrežja}
+      Omrežje si predstavljamo kot utežen graf, kjer so naprave vozlišča.
+      Dve vozlišči sta povezani, če sta pripadajoči napravi dovolj blizu,
+      da lahko izmerita razdaljo. Utež povezav je izmerjena razdalja,
+      kjer pri merjenju pride do napak.
 
-			Vemo lokacije od nekaterih naprav, tem rečemo sidra. Izračunati
-			želimo približke za lokacije ostalih, tem rečemo agenti.
-		\end{block}
-		Predpostavimo, da je omrežje naprav povezano.
-	\end{frame}
+      Vemo lokacije od nekaterih naprav, tem rečemo sidra. Izračunati
+      želimo približke za lokacije ostalih, tem rečemo agenti.
+    \end{block}
+    Predpostavimo, da je omrežje naprav povezano.
+  \end{frame}
 
-	\begin{frame}
-		\frametitle{Oznake}
-		Oznake
-		\begin{itemize}
-			\item Vozlišča označujemo z črkami $u, v, s \in V$.
-			\item $x_u \in \mathbb{R}^n\;;\;n=2, 3$ lokacija naprave u.
-			\item Za $A \coloneqq \left\{v_1, v_2, \ldots, v_k\right\} \subseteq V$ je
-				$\vec{x}_A = \left(x_{v_1}, x_{v_2}, \ldots, x_{v_k}\right)$
-			\item Za $uv \in E$ je $d_{u,v}$ izmerjena razdalja.
-		\end{itemize}
-	\end{frame}
+  \begin{frame}
+    \frametitle{Oznake}
+    Oznake
+    \begin{itemize}
+      \item Vozlišča označujemo z črkami $u, v, s \in V$.
+      \item $x_u \in \mathbb{R}^n\;;\;n=2, 3$ lokacija naprave u.
+      \item Za $A \coloneqq \left\{v_1, v_2, \ldots, v_k\right\} \subseteq V$ je
+        $\vec{x}_A = \left(x_{v_1}, x_{v_2}, \ldots, x_{v_k}\right)$
+      \item Za $uv \in E$ je $d_{u,v}$ izmerjena razdalja.
+    \end{itemize}
+  \end{frame}
 
-	\begin{frame}
-		$$E\left(\vec{x}_V\right) \coloneqq \sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2$$
-		\pause
-		$$P\left(\vec{x}_V\right) = exp\left[-\sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2\right] =
-		\prod_{uv \in E}e^{-\left(\left|x_u - x_v\right|-d_{u,v}\right)^2}$$
-		$$
-		= \prod_{uv \in E}\psi_{u,v}\left(x_u,x_v\right)
-		$$
-		\pause
-		Omejimo na $S \subseteq \mathbb{R}^{n\cdot \left|V\right|}$ s končnim volumnom.
-		$$\tilde{P}\left(\vec{x}_V\right) = \left(\int_S P\left(\vec{z}_V\right)d\vec{z}_V\right)^{-1}
-		P\left(\vec{x}_V\right)$$
-		\pause
-		$\vec{X}_V$ zvezno porazdeljen slučajni vektor z gosto $\tilde{P}$.
-	\end{frame}
+  \begin{frame}
+    $$E\left(\vec{x}_V\right) \coloneqq \sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2$$
+    \pause
+    $$P\left(\vec{x}_V\right) = exp\left[-\sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2\right] =
+    \prod_{uv \in E}e^{-\left(\left|x_u - x_v\right|-d_{u,v}\right)^2}$$
+    $$
+    = \prod_{uv \in E}\psi_{u,v}\left(x_u,x_v\right)
+    $$
+    \pause
+    Omejimo na $S \subseteq \mathbb{R}^{n\cdot \left|V\right|}$ s končnim volumnom.
+    $$\tilde{P}\left(\vec{x}_V\right) = \left(\int_S P\left(\vec{z}_V\right)d\vec{z}_V\right)^{-1}
+    P\left(\vec{x}_V\right)$$
+    \pause
+    $\vec{X}_V$ zvezno porazdeljen slučajni vektor z gosto $\tilde{P}$.
+  \end{frame}
 
-	\begin{frame}
-		\frametitle{Markovska polja}
-		\begin{block}{Pogojna neodvisnost}
-			Nakjučna vektorja $\vec{X}, \vec{Y}$ sta pogojno
-			neodvisna ob $\vec{Z}$, če velja:
-			$$f_{\vec{X}, \vec{Y}|\vec{Z}}\left(\vec{x}, \vec{y}\ |\ \vec{Z} = \vec{z}\right) =
-			f_{\vec{X}|\vec{Z}}\left(\vec{x}\ |\ \vec{Z} = \vec{z}\right) \
-			f_{\vec{Y}|\vec{Z}}\left(\vec{y}\ |\ \vec{Z} = \vec{z}\right)
-			$$
-		\end{block}
-		\pause
-		\begin{definicija}
-			Graf $G = \left(V, E\right)$, in naključni slučajni vektorji
-			$\vec{X}_v$, indeksirani z $v \in V$ tvorijo Markovsko polje,
-			če velja Markova lastnost po parih:
+  \begin{frame}
+    \frametitle{Markovska polja}
+    \begin{block}{Pogojna neodvisnost}
+      Nakjučna vektorja $\vec{X}, \vec{Y}$ sta pogojno
+      neodvisna ob $\vec{Z}$, če velja:
+      $$f_{\vec{X}, \vec{Y}|\vec{Z}}\left(\vec{x}, \vec{y}\ |\ \vec{Z} = \vec{z}\right) =
+      f_{\vec{X}|\vec{Z}}\left(\vec{x}\ |\ \vec{Z} = \vec{z}\right) \
+      f_{\vec{Y}|\vec{Z}}\left(\vec{y}\ |\ \vec{Z} = \vec{z}\right)
+      $$
+    \end{block}
+    \pause
+    \begin{definicija}
+      Graf $G = \left(V, E\right)$, in naključni slučajni vektorji
+      $\vec{X}_v$, indeksirani z $v \in V$ tvorijo Markovsko polje,
+      če velja Markova lastnost po parih:
 
-			Za vsaka nesosedna $u, v \in V$ sta $\vec{X}_u$, $\vec{X}_v$
-			pogojno neodvisna ob vseh ostalih
-			$\vec{X}_{V\backslash\left\{u, v\right\}}$
-		\end{definicija}
-	\end{frame}
+      Za vsaka nesosedna $u, v \in V$ sta $\vec{X}_u$, $\vec{X}_v$
+      pogojno neodvisna ob vseh ostalih
+      $\vec{X}_{V\backslash\left\{u, v\right\}}$
+    \end{definicija}
+  \end{frame}
 
-	\begin{frame}
-		\frametitle{$\vec{X}_V$ je Markovsko polje}
-		Za nesosednja $u, v \in V$ je
-		$$
-		f_{x_u,x_v|\vec{X}_{V\backslash \left\{u,v\right\}}}
-			\left(x_u,x_y | \vec{X}_{V\backslash \left\{u,v\right\}} = \vec{y}_{V\backslash \left\{u,v\right\}}\right) \propto
-		$$
-		\pause
-		$$
-		\propto \prod_{su \in E}\psi_{s,v}\left(y_s,x_u\right)
-			\prod_{sv \in E}\psi_{s,v}\left(y_s,x_v\right)
-			\prod_{\substack{\left\{s,t\right\} \in E \\ \left\{s,t\right\}\cap \left\{u,v\right\} = \emptyset}}\psi_{s,v}\left(y_s,y_t\right)
-			\propto
-		$$
-		\pause
-		$$
-		\propto g\left(x_u\right) h\left(x_v\right) \Rightarrow X_u, X_v \text{ pogojno neodvisna ob } \vec{X}_{V\backslash \left\{u,v\right\}}
-		$$
-	\end{frame}
+  \begin{frame}
+    \frametitle{$\vec{X}_V$ je Markovsko polje}
+    Za nesosednja $u, v \in V$ je
+    $$
+    f_{x_u,x_v|\vec{X}_{V\backslash \left\{u,v\right\}}}
+      \left(x_u,x_y | \vec{X}_{V\backslash \left\{u,v\right\}} = \vec{y}_{V\backslash \left\{u,v\right\}}\right) \propto
+    $$
+    \pause
+    $$
+    \propto \prod_{su \in E}\psi_{s,v}\left(y_s,x_u\right)
+      \prod_{sv \in E}\psi_{s,v}\left(y_s,x_v\right)
+      \prod_{\substack{\left\{s,t\right\} \in E \\ \left\{s,t\right\}\cap \left\{u,v\right\} = \emptyset}}\psi_{s,v}\left(y_s,y_t\right)
+      \propto
+    $$
+    \pause
+    $$
+    \propto g\left(x_u\right) h\left(x_v\right) \Rightarrow X_u, X_v \text{ pogojno neodvisna ob } \vec{X}_{V\backslash \left\{u,v\right\}}
+    $$
+  \end{frame}
 
-	\begin{frame}
-		\frametitle{Razširjanje zaupanja na drevesih}
-		Poglejmo si primer, ko je graf drevo.
-		\setlength{\columnsep}{-5cm}
-		\begin{multicols}{2}
-			\includegraphics[width=4cm]{message_passing.pdf}
-			\columnbreak{}
+  \begin{frame}
+    \frametitle{Razširjanje zaupanja na drevesih}
+    Poglejmo si primer, ko je graf drevo.
+    \setlength{\columnsep}{-5cm}
+    \begin{multicols}{2}
+      \includegraphics[width=4cm]{message_passing.pdf}
+      \columnbreak{}
 
-			\vspace{5cm}
-			$$
-			\int_{\vec{X}_{V_a \backslash \left\{A\right\}}} f_{\vec{X}_{V_a} | \vec{X}_{V_s}}\left(\vec{x}_{V_a} | \vec{x}_{V_s} = vec{y}_{V_s}\right)
-			d\vec{x}_{V_a \backslash \left\{A\right\}}\propto
-			$$
-			$$
-			\quad \int_{X_B,X_D,X_C} \psi_{U,A} \psi_{B,A} \psi_{C,A} \psi_{V,C} \psi_{D,C}dx_Bdx_Ddx_C =
-			$$
-			\pause
-			\vspace{1cm}
-			$$
-			\psi_{U,A} \int_{X_B} \psi_{B,A}dx_B \int_{X_C} \psi_{C,A} \psi_{V,C}
-			\int_{X_D} \psi_{D,C}dx_Ddx_C
-			$$
-		\end{multicols}
-	\end{frame}
+      \vspace{5cm}
+      $$
+      \int_{\vec{X}_{V_a \backslash \left\{A\right\}}} f_{\vec{X}_{V_a} | \vec{X}_{V_s}}\left(\vec{x}_{V_a} | \vec{x}_{V_s} = vec{y}_{V_s}\right)
+      d\vec{x}_{V_a \backslash \left\{A\right\}}\propto
+      $$
+      $$
+      \quad \int_{X_B,X_D,X_C} \psi_{U,A} \psi_{B,A} \psi_{C,A} \psi_{V,C} \psi_{D,C}dx_Bdx_Ddx_C =
+      $$
+      \pause
+      \vspace{1cm}
+      $$
+      \psi_{U,A} \int_{X_B} \psi_{B,A}dx_B \int_{X_C} \psi_{C,A} \psi_{V,C}
+      \int_{X_D} \psi_{D,C}dx_Ddx_C
+      $$
+    \end{multicols}
+  \end{frame}
 
-	\begin{frame}
-		\begin{align*}
-			\text{Za } u,v \in V_a\text{: } &
-			\mu_{u \to v}\left(x_v\right) \coloneqq
-			\int_{X_u} \psi_{u,v}\left(x_u,x_v\right)
-			\prod_{t\in N\left(u\right)\backslash v}
-			\mu_{t \to u}\left(x_u\right)dx_u
-			\\
-			\text{Za }u \in V_s\text{ in }v \in V_a\text{: } &
-			\mu_{u \to v}\left(x_v\right) \coloneqq
-			\psi_{u,v}\left(y_u,x_v\right)
-		\end{align*}
-		\pause
-		$$
-		\Rightarrow
-		\psi_{U,A} \int_{X_B} \psi_{B,A}dx_B \int_{X_C} \psi_{C,A} \psi_{V,C}
-		\int_{X_D} \psi_{D,C}dx_Ddx_C=
-		$$
-		\pause
-		$$
-		\mu_{U \to A}\left(x_A\right)\mu_{B \to A}\left(x_A\right)
-		\int_{X_C} \psi_{C,A}
-		\mu_{V \to C}\left(x_C\right)
-		\mu_{D \to C}\left(x_C\right)dx_C=
-		$$
-		\pause
-		$$
-		\mu_{U \to A}\left(x_A\right)\mu_{B \to A}\left(x_A\right)
-		\mu_{C \to A}\left(x_A\right) =
-		$$
-		$$
-		\prod_{u \in N\left(A\right)}\mu_{u \to A}\left(x_A\right) \eqqcolon M_A\left(x_A\right)
-		$$
-	\end{frame}
+  \begin{frame}
+    \begin{align*}
+      \text{Za } u,v \in V_a\text{: } &
+      \mu_{u \to v}\left(x_v\right) \coloneqq
+      \int_{X_u} \psi_{u,v}\left(x_u,x_v\right)
+      \prod_{t\in N\left(u\right)\backslash v}
+      \mu_{t \to u}\left(x_u\right)dx_u
+      \\
+      \text{Za }u \in V_s\text{ in }v \in V_a\text{: } &
+      \mu_{u \to v}\left(x_v\right) \coloneqq
+      \psi_{u,v}\left(y_u,x_v\right)
+    \end{align*}
+    \pause
+    $$
+    \Rightarrow
+    \psi_{U,A} \int_{X_B} \psi_{B,A}dx_B \int_{X_C} \psi_{C,A} \psi_{V,C}
+    \int_{X_D} \psi_{D,C}dx_Ddx_C=
+    $$
+    \pause
+    $$
+    \mu_{U \to A}\left(x_A\right)\mu_{B \to A}\left(x_A\right)
+    \int_{X_C} \psi_{C,A}
+    \mu_{V \to C}\left(x_C\right)
+    \mu_{D \to C}\left(x_C\right)dx_C=
+    $$
+    \pause
+    $$
+    \mu_{U \to A}\left(x_A\right)\mu_{B \to A}\left(x_A\right)
+    \mu_{C \to A}\left(x_A\right) =
+    $$
+    $$
+    \prod_{u \in N\left(A\right)}\mu_{u \to A}\left(x_A\right) \eqqcolon M_A\left(x_A\right)
+    $$
+  \end{frame}
 
-	\begin{frame}
-		\frametitle{Pravilnost razširjanja zaupanja na drevesih}
-		\begin{izrek}
-			Naj bo $G = \left(V, E\right)$ drevo in $V_a$, $V_s$, $\vec{X}_V$,
-			$\vec{y}_{V_s}$ in $M_u\left(x_u\right)$ kot prej.
-			Zaupanje je proporcionalno robni gostoti
-			$$
-			M_u\left(x_u\right) \propto f_{X_u | \vec{X}_{V_s}}\left(x_u | \vec{X}_{V_s} = \vec{y}_{V_s}\right).
-			$$
-		\end{izrek}
-		Ideja dokaza so poddrevesa osnovnega drevesa s korenom v $u$.
-	\end{frame}
+  \begin{frame}
+    \frametitle{Pravilnost razširjanja zaupanja na drevesih}
+    \begin{izrek}
+      Naj bo $G = \left(V, E\right)$ drevo in $V_a$, $V_s$, $\vec{X}_V$,
+      $\vec{y}_{V_s}$ in $M_u\left(x_u\right)$ kot prej.
+      Zaupanje je proporcionalno robni gostoti
+      $$
+      M_u\left(x_u\right) \propto f_{X_u | \vec{X}_{V_s}}\left(x_u | \vec{X}_{V_s} = \vec{y}_{V_s}\right).
+      $$
+    \end{izrek}
+    Ideja dokaza so poddrevesa osnovnega drevesa s korenom v $u$.
+  \end{frame}
 
-	\begin{frame}
-		\frametitle{Za grafe s cikli}
-		Naj bosta $u,v \in V_a$, $i \in \mathbb{N}$ pa število iteracije.
-		$$
-		M_u^{\left(i\right)}\left(x_u\right) \coloneqq
-		\prod_{t \in N\left(u\right)}\mu^{\left(i\right)}_{t \to u}\left(x_u\right)
-		$$
-		$$
-		\mu_{v \to u}^{\left(i\right)}\left(x_u\right) \coloneqq
-		\int_{X_v} \psi_{v,u}\left(x_v,x_u\right)
-		\frac{
-			M_v^{\left(i-1\right)}\left(x_v\right)}{
-			\mu_{u \to v}^{\left(i-1\right)}\left(x_v\right)
-		}dx_v
-		$$
-		Za $v \in V_s$, $u \in V_a$ je pa
-		$\mu_{v \to u}^{\left(i\right)}\left(x_u\right) \coloneqq \psi_{v,u}\left(y_v, x_u\right)$
+  \begin{frame}
+    \frametitle{Za grafe s cikli}
+    Naj bosta $u,v \in V_a$, $i \in \mathbb{N}$ pa število iteracije.
+    $$
+    M_u^{\left(i\right)}\left(x_u\right) \coloneqq
+    \prod_{t \in N\left(u\right)}\mu^{\left(i\right)}_{t \to u}\left(x_u\right)
+    $$
+    $$
+    \mu_{v \to u}^{\left(i\right)}\left(x_u\right) \coloneqq
+    \int_{X_v} \psi_{v,u}\left(x_v,x_u\right)
+    \frac{
+      M_v^{\left(i-1\right)}\left(x_v\right)}{
+      \mu_{u \to v}^{\left(i-1\right)}\left(x_v\right)
+    }dx_v
+    $$
+    Za $v \in V_s$, $u \in V_a$ je pa
+    $\mu_{v \to u}^{\left(i\right)}\left(x_u\right) \coloneqq \psi_{v,u}\left(y_v, x_u\right)$
 
-		Za drevesa to konvergira k pravim vrednostim.
-	\end{frame}
+    Za drevesa to konvergira k pravim vrednostim.
+  \end{frame}
 
   \begin{frame}
     \frametitle{Izboljšave}
