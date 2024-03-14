@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[notes]{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage[slovene]{babel}
 \usepackage{amsmath}
@@ -151,6 +151,10 @@
     \end{multicols}
   \end{frame}
 
+  \note{
+  	Ta primer je enak kot na kratki predstavitvi.
+  }
+
   \begin{frame}
     \begin{align*}
       \text{Za } u,v \in V_a\text{: } &
@@ -199,6 +203,15 @@
     Ideja dokaza so poddrevesa osnovnega drevesa s korenom v $u$.
   \end{frame}
 
+  \note{
+  	Ker so sporočila definirana rekurzivno, se je treba najprej prepričati, da
+  	obstaja vrstni izračuna, v katerem imamo na vsakem koraku že izračunana
+  	vsa potrebna sporočila za izračun trenutnega sporočila. Za drevesa to velja,
+  	kar bom na predstavitvi pokazal z indukcijo.
+
+  	Po tem lahko dokažem še trditev iz prosojnice.
+  }
+
   \begin{frame}
     \frametitle{Za grafe s cikli}
     Naj bosta $u,v \in V_a$, $i \in \mathbb{N}$ pa število iteracije.
@@ -220,16 +233,50 @@
     Za drevesa to konvergira k pravim vrednostim.
   \end{frame}
 
+  \note{
+  	Konvergence ne bom dokazal.
+
+  	Ta slide je enak kot na kratki predstavitvi.
+  }
+
   \begin{frame}
     \frametitle{Izboljšave}
     \begin{itemize}
-      \item Za $u,v$, ki $d\left(u,v\right) = 2$, dodamo potenciale.
+      \item Za $u,v$, ki $d\left(u,v\right) \geq 2$, dodamo potenciale.
       \item Potenciale popravimo zaradi velikih odstopanj.
       \item Sporočilo $\mu_{u \to v}$ aproksimiramo z
         $\sum_{i=1}^{n}w_i exp\left[-\left|x-x_i\right|^2/\sigma_i\right]$.
       \item Algoritem izvajamo večkrat na vpetih drevesih.
     \end{itemize}
   \end{frame}
+
+  \note{
+  	Pri prem za $u,v$ vemo, da nista izmerila medsebojne razdalje in iz tega
+  	sklepamo, da nista blizu skupaj. Na podlagi tega lahko dodamo potencial,
+  	ki narašča z razdaljo. Za nek $R > 0$ lahko izberemo
+  	$$\psi_{u,v}\left(x_u,x_v\right) =
+  	\begin{cases}
+  		1 & \text{; } \left|x_u - x_v\right| \geq R\\
+  		0 & \text{; } \left|x_u - x_v\right| < R
+  	\end{cases}
+  	$$
+  	ali pa raje $\psi_{u,v}\left(x_u,x_v\right) =
+  	1 - exp\left[-\frac{\left|x_u-x_v\right|^2}{2R^2}\right]$.
+
+  	Pri drugem za potenciale dodamo neko konstanto, da vrednosti potencialov
+  	ob $x_u$, $x_v$, katerih razdalja je močno različna od $d_{u,v}$ ne zavzamejo
+  	premajhnih vrednosti. V praksi se izkaže, da če tega ne naredimo, je
+  	lokalizacija zelo občutljiv na veliko meritveno napako pri le eni razdalji.
+  }
+
+  \note{
+  	Tretja točka govori o \emph{nonparametric belief propagation}.
+
+  	Če algoritem izvedemo večkrat na vpetih drevesih bo gotovo na vsakem
+  	drevesu konvergiral, a vsako od rezultatov upošteva le nekatere razdalje.
+  	Na koncu zaupanja za dano vozlišče dobimo tako, da zmnožimo zaupanja
+  	iz vseh dreves. V praksi to deluje dobro za goste grafe.
+  }
 
 \end{document}
 
