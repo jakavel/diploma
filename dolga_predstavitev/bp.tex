@@ -1,4 +1,4 @@
-\documentclass[notes]{beamer}
+\documentclass{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage[slovene]{babel}
 \usepackage{amsmath}
@@ -39,9 +39,9 @@
     \frametitle{Oznake}
     Oznake
     \begin{itemize}
-      \item Vozlišča označujemo z črkami $u, v, s \in V$.
-      \item $x_u \in \mathbb{R}^n\;;\;n=2, 3$ lokacija naprave u.
-      \item Za $A \coloneqq \left\{v_1, v_2, \ldots, v_k\right\} \subseteq V$ je
+      \item Vozlišča označujemo z črkami $u, v \in V$.
+      \item $x_u \in \mathbb{R}^n$ lokacija naprave u.
+      \item Za $A = \left\{v_1, v_2, \ldots, v_k\right\} \subseteq V$ je
         $\vec{x}_A = \left(x_{v_1}, x_{v_2}, \ldots, x_{v_k}\right)$
       \item Za $uv \in E$ je $d_{u,v}$ izmerjena razdalja.
     \end{itemize}
@@ -50,14 +50,14 @@
   \begin{frame}
     $$E\left(\vec{x}_V\right) \coloneqq \sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2$$
     \pause
-    $$P\left(\vec{x}_V\right) = exp\left[-\sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2\right] =
+    $$P\left(\vec{x}_V\right) \coloneqq exp\left[-\sum_{uv \in E}\left(\left|x_u - x_v\right|-d_{u,v}\right)^2\right] =
     \prod_{uv \in E}e^{-\left(\left|x_u - x_v\right|-d_{u,v}\right)^2}$$
     $$
     = \prod_{uv \in E}\psi_{u,v}\left(x_u,x_v\right)
     $$
     \pause
     Omejimo na $S \subseteq \mathbb{R}^{n\cdot \left|V\right|}$ s končnim volumnom.
-    $$\tilde{P}\left(\vec{x}_V\right) = \left(\int_S P\left(\vec{z}_V\right)d\vec{z}_V\right)^{-1}
+    $$\tilde{P}\left(\vec{x}_V\right) \coloneqq \left(\int_S P\left(\vec{z}_V\right)d\vec{z}_V\right)^{-1}
     P\left(\vec{x}_V\right)$$
     \pause
     $\vec{X}_V$ zvezno porazdeljen slučajni vektor z gosto $\tilde{P}$.
@@ -89,11 +89,11 @@
     \end{block}
     \pause
     \begin{definicija}
-      Graf $G = \left(V, E\right)$, in naključni slučajni vektorji
-      $\vec{X}_v$, indeksirani z $v \in V$ tvorijo Markovsko polje,
+      Graf $G = \left(V, E\right)$, in slučajne spremenljivke
+      $\vec{X}_V$ tvorijo Markovsko polje,
       če velja Markovska lastnost po parih:
 
-      Za vsaka nesosedna $u, v \in V$ sta $\vec{X}_u$, $\vec{X}_v$
+      Za vsaka nesosedna $u, v \in V$ sta $X_u$, $X_v$
       pogojno neodvisna ob vseh ostalih
       $\vec{X}_{V\backslash\left\{u, v\right\}}$
     \end{definicija}
@@ -136,17 +136,17 @@
 
       \vspace{5cm}
       $$
-      \int_{\vec{X}_{V_a \backslash \left\{A\right\}}} f_{\vec{X}_{V_a} | \vec{X}_{V_s}}\left(\vec{x}_{V_a} | \vec{x}_{V_s} = vec{y}_{V_s}\right)
+      \int_{\vec{X}_{V_a \backslash \left\{a\right\}}} f_{\vec{X}_{V_a} | \vec{X}_{V_s}}\left(\vec{x}_{V_a} | \vec{x}_{V_s} = \vec{y}_{V_s}\right)
       d\vec{x}_{V_a \backslash \left\{A\right\}}\propto
       $$
       $$
-      \quad \int_{X_B,X_D,X_C} \psi_{U,A} \psi_{B,A} \psi_{C,A} \psi_{V,C} \psi_{D,C}dx_Bdx_Ddx_C =
+      \quad \int_{X_b,X_d,X_c} \psi_{u,a} \psi_{b,a} \psi_{c,a} \psi_{v,c} \psi_{d,c}dx_bdx_ddx_c =
       $$
       \pause
       \vspace{1cm}
       $$
-      \psi_{U,A} \int_{X_B} \psi_{B,A}dx_B \int_{X_C} \psi_{C,A} \psi_{V,C}
-      \int_{X_D} \psi_{D,C}dx_Ddx_C
+      \psi_{u,a} \int_{X_b} \psi_{b,a}dx_b \int_{X_c} \psi_{c,a} \psi_{v,c}
+      \int_{X_d} \psi_{d,c}dx_ddx_c
       $$
     \end{multicols}
   \end{frame}
@@ -170,23 +170,23 @@
     \pause
     $$
     \Rightarrow
-    \psi_{U,A} \int_{X_B} \psi_{B,A}dx_B \int_{X_C} \psi_{C,A} \psi_{V,C}
-    \int_{X_D} \psi_{D,C}dx_Ddx_C=
+    \psi_{u,a} \int_{X_b} \psi_{b,a}dx_b \int_{X_c} \psi_{c,a} \psi_{v,c}
+    \int_{X_d} \psi_{d,c}dx_ddx_c=
     $$
     \pause
     $$
-    \mu_{U \to A}\left(x_A\right)\mu_{B \to A}\left(x_A\right)
-    \int_{X_C} \psi_{C,A}
-    \mu_{V \to C}\left(x_C\right)
-    \mu_{D \to C}\left(x_C\right)dx_C=
+    \mu_{u \to a}\left(x_a\right)\mu_{b \to a}\left(x_a\right)
+    \int_{X_c} \psi_{c,a}
+    \mu_{V \to c}\left(x_c\right)
+    \mu_{d \to c}\left(x_c\right)dx_c=
     $$
     \pause
     $$
-    \mu_{U \to A}\left(x_A\right)\mu_{B \to A}\left(x_A\right)
-    \mu_{C \to A}\left(x_A\right) =
+    \mu_{u \to a}\left(x_a\right)\mu_{b \to a}\left(x_a\right)
+    \mu_{c \to a}\left(x_a\right) =
     $$
     $$
-    \prod_{u \in N\left(A\right)}\mu_{u \to A}\left(x_A\right) \eqqcolon M_A\left(x_A\right)
+    \prod_{t \in N\left(a\right)}\mu_{t \to a}\left(x_a\right) \eqqcolon M_a\left(x_a\right)
     $$
   \end{frame}
 
@@ -194,7 +194,7 @@
     \frametitle{Pravilnost razširjanja zaupanja na drevesih}
     \begin{izrek}
       Naj bo $G = \left(V, E\right)$ drevo in $V_a$, $V_s$, $\vec{X}_V$,
-      $\vec{y}_{V_s}$ in $M_u\left(x_u\right)$ kot prej.
+      $\vec{y}_{V_s}$, $M_u\left(x_u\right)$ kot prej.
       Zaupanje je proporcionalno robni gostoti
       $$
       M_u\left(x_u\right) \propto f_{X_u | \vec{X}_{V_s}}\left(x_u | \vec{X}_{V_s} = \vec{y}_{V_s}\right).
@@ -245,7 +245,7 @@
       \item Za $u,v$, ki $d\left(u,v\right) \geq 2$, dodamo potenciale.
       \item Potenciale popravimo zaradi velikih odstopanj.
       \item Sporočilo $\mu_{u \to v}$ aproksimiramo z
-        $\sum_{i=1}^{n}w_i exp\left[-\left|x-x_i\right|^2/\sigma_i\right]$.
+        $\sum_{i=1}^{n}\frac{w_i}{\sqrt{2\pi}} exp\left[-\frac{\left|x-x_i\right|^2}{2\sigma_i^2}\right]$.
       \item Algoritem izvajamo večkrat na vpetih drevesih.
     \end{itemize}
   \end{frame}
@@ -263,18 +263,18 @@
   	ali pa raje $\psi_{u,v}\left(x_u,x_v\right) =
   	1 - exp\left[-\frac{\left|x_u-x_v\right|^2}{2R^2}\right]$.
 
-  	Pri drugem za potenciale dodamo neko konstanto, da vrednosti potencialov
+  	Pri drugem za potenciale dodamo neko konstanto, da potenciali
   	ob $x_u$, $x_v$, katerih razdalja je močno različna od $d_{u,v}$ ne zavzamejo
   	premajhnih vrednosti. V praksi se izkaže, da če tega ne naredimo, je
-  	lokalizacija zelo občutljiv na veliko meritveno napako pri le eni razdalji.
+  	lokalizacija zelo občutljiva na veliko meritveno napako pri le eni razdalji.
   }
 
   \note{
   	Tretja točka govori o \emph{nonparametric belief propagation}.
 
-  	Če algoritem izvedemo večkrat na vpetih drevesih bo gotovo na vsakem
-  	drevesu konvergiral, a vsako od rezultatov upošteva le nekatere razdalje.
-  	Na koncu zaupanja za dano vozlišče dobimo tako, da zmnožimo zaupanja
+  	Pri četrti točki bo gotovo algoritem na vsakem vpetem
+  	drevesu konvergiral, a pri vsakem od rezultatov upošteva le nekatere povezave.
+  	Na koncu zaupanje za vozlišče dobimo tako, da zmnožimo zaupanja tega vozlišča
   	iz vseh dreves. V praksi to deluje dobro za goste grafe.
   }
 
